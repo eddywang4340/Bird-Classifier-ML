@@ -39,5 +39,5 @@ def predict_bird(file):
     animal = get_bird_name(label_index)
     print("The predicted bird is a "+animal+" with accuracy = "+str(acc))
 
-predict_bird("pigeon_test1.jpg")
+predict_bird("unknown_bird_test2.jpg")
 
