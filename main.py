@@ -48,6 +48,42 @@ for pigeon in pigeon:
     data.append(np.array(resized_image))
     labels.append(3)
 
+# creating dataset for loon
+loons = os.listdir("ML - Bird Classifier/loon")
+for loon in loons:
+    imag = cv2.imread("ML - Bird Classifier/loon/"+loon)
+    img_from_ar = Image.fromarray(imag, 'RGB')
+    resized_image = img_from_ar.resize((50, 50))
+    data.append(np.array(resized_image))
+    labels.append(4)
+
+# creating dataset for seagulls
+seagulls = os.listdir("ML - Bird Classifier/seagull")
+for gull in seagulls:
+    imag = cv2.imread("ML - Bird Classifier/seagull/"+gull)
+    img_from_ar = Image.fromarray(imag, 'RGB')
+    resized_image = img_from_ar.resize((50, 50))
+    data.append(np.array(resized_image))
+    labels.append(5)
+
+# creating dataset for red-tailed hawk
+red_tailed_hawks = os.listdir("ML - Bird Classifier/red_tailed_hawk")
+for hawk in red_tailed_hawks:
+    imag = cv2.imread("ML - Bird Classifier/red_tailed_hawk/"+hawk)
+    img_from_ar = Image.fromarray(imag, 'RGB')
+    resized_image = img_from_ar.resize((50, 50))
+    data.append(np.array(resized_image))
+    labels.append(6)
+
+# creating dataset for great blue heron
+great_blue_heron = os.listdir("ML - Bird Classifier/great_blue_heron")
+for heron in great_blue_heron:
+    imag = cv2.imread("ML - Bird Classifier/great_blue_heron/"+heron)
+    img_from_ar = Image.fromarray(imag, 'RGB')
+    resized_image = img_from_ar.resize((50, 50))
+    data.append(np.array(resized_image))
+    labels.append(7)
+
 # converting and saving dataset into numpy array
 birds = np.array(data)
 labels = np.array(labels)
@@ -87,17 +123,17 @@ y_test = keras.utils.to_categorical(y_test, num_species)
 # building classification model
 # adding increasing filter sizes helps with adding more depth to images
 model= tf.keras.models.Sequential()
-model.add(Conv2D(filters=16,kernel_size=2,padding="same",activation="relu",input_shape=(50,50,3)))
+model.add(Conv2D(filters=16, kernel_size=2, padding="same", activation="relu", input_shape=(50,50,3)))
 model.add(MaxPooling2D(pool_size=2))
-model.add(Conv2D(filters=32,kernel_size=2,padding="same",activation="relu"))
+model.add(Conv2D(filters=32, kernel_size=2, padding="same", activation="relu"))
 model.add(MaxPooling2D(pool_size=2))
-model.add(Conv2D(filters=64,kernel_size=2,padding="same",activation="relu"))
+model.add(Conv2D(filters=64, kernel_size=2, padding="same", activation="relu"))
 model.add(MaxPooling2D(pool_size=2))
 model.add(Dropout(0.2))
 model.add(Flatten())
-model.add(Dense(500,activation="relu"))
+model.add(Dense(500, activation="relu"))
 model.add(Dropout(0.2))
-model.add(Dense(4,activation="softmax"))
+model.add(Dense(8, activation="softmax"))
 model.summary()
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 model.fit(x_train, y_train, batch_size=50, epochs=100, verbose=1)

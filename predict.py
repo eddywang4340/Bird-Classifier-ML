@@ -25,6 +25,14 @@ def get_bird_name(label):
         return "northern cardinal"
     if label == 3:
         return "pigeon"
+    if label == 4:
+        return "loon"
+    if label == 5:
+        return "seagull"
+    if label == 6:
+        return "red-tailed hawk"
+    if label == 7:
+        return "great blue heron"
 def predict_bird(file):
     print("Predicting .................................")
     ar = convert_to_array(file)
@@ -33,7 +41,7 @@ def predict_bird(file):
     a = []
     a.append(ar)
     a = np.array(a)
-    score = loaded_model.predict(a,verbose=1)
+    score = loaded_model.predict(a, verbose=1)
     label_index = np.argmax(score)
     acc = np.max(score)
     animal = get_bird_name(label_index)
