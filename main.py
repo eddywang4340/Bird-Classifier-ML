@@ -146,5 +146,14 @@ print('\n', 'Test accuracy:', score[1])
 model_json = model.to_json()
 with open("model.json", "w") as json_file:
     json_file.write(model_json)
-model.save_weights("model.h5")
 
+# saving model into TFLite file
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+tflite_model = converter.convert()
+
+# Save the converted model
+with open('model.tflite', 'wb') as f:
+    f.write(tflite_model)
+
+# Save model weights
+model.save_weights("model.h5")
