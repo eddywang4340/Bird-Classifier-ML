@@ -1,51 +1,67 @@
-from keras.models import model_from_json
-import cv2
-from PIL import Image
+import tensorflow as tf
 import numpy as np
+from PIL import Image
+import matplotlib.pyplot as plt
 
-# load the model from the json file
-json_file = open('model.json', 'r')
-loaded_model_json = json_file.read()
-json_file.close()
-loaded_model = model_from_json(loaded_model_json)
-loaded_model.load_weights("model.h5")
+# Load the model
+model = tf.keras.models.load_model('bird_classifier_model_200_species.h5')
 
-# predicting on a single image
-def convert_to_array(img):
-    im = cv2.imread(img)
-    img = Image.fromarray(im, 'RGB')
-    image = img.resize((50, 50))
-    return np.array(image)
-def get_bird_name(label):
-    if label == 0:
-        return "canada goose"
-    if label == 1:
-        return "blue jay"
-    if label == 2:
-        return "northern cardinal"
-    if label == 3:
-        return "pigeon"
-    if label == 4:
-        return "loon"
-    if label == 5:
-        return "seagull"
-    if label == 6:
-        return "red-tailed hawk"
-    if label == 7:
-        return "great blue heron"
-def predict_bird(file):
-    print("Predicting .................................")
-    ar = convert_to_array(file)
-    ar = ar/255
-    label = 1
-    a = []
-    a.append(ar)
-    a = np.array(a)
-    score = loaded_model.predict(a, verbose=1)
-    label_index = np.argmax(score)
-    acc = np.max(score)
-    animal = get_bird_name(label_index)
-    print("The predicted bird is a "+animal+" with accuracy = "+str(acc))
+# Load class names
+with open('class_names.txt', 'r') as f:
+    class_names = [line.strip() for line in f.readlines()]
 
-predict_bird("blue_heron_test1.jpeg")
+def predict_bird(image_path):
+    # Load and preprocess the image
+    img = Image.open(image_path).convert('RGB')
+    img = img.resize((224, 224))
+    img_array = np.array(img)
+    img_array = tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
+    img_array = np.expand_dims(img_array, axis=0)
+    
+    # Make prediction
+    predictions = model.predict(img_array)
+    
+    # Get top 5 predictions
+    top_5_indices = np.argsort(predictions[0])[-5:][::-1]
+    top_5_probabilities = predictions[0][top_5_indices]
+    top_5_class_names = [class_names[i] for i in top_5_indices]
+    
+    # Format results
+    results = []
+    for i in range(5):
+        species_name = top_5_class_names[i].replace('_', ' ').title()
+        results.append({
+            'species': species_name,
+            'confidence': float(top_5_probabilities[i])
+        })
+    
+    return results
 
+def show_prediction(image_path, results):
+    img = Image.open(image_path)
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.imshow(img)
+    plt.axis('off')
+    plt.title('Input Image')
+    
+    plt.subplot(1, 2, 2)
+    species = [r['species'] for r in results]
+    confidence = [r['confidence'] for r in results]
+    y_pos = np.arange(len(species))
+    
+    plt.barh(y_pos, confidence, align='center')
+    plt.yticks(y_pos, species)
+    plt.xlabel('Confidence')
+    plt.title('Top 5 Predictions')
+    plt.tight_layout()
+    plt.show()
+
+# Example usage
+image_path = "pigeon_test1.jpg"  # Replace with your test image
+results = predict_bird(image_path)
+print("Top 5 predictions:")
+for i, result in enumerate(results):
+    print(f"{i+1}. {result['species']} - {result['confidence']:.2%}")
+
+show_prediction(image_path, results)

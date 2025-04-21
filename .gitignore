@@ -1,0 +1,77 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+.venv/
+ENV/
+env/
+
+# Model files and data
+*.h5
+*.tflite
+model_output/
+CUB_200_2011/
+CUB_200_2011.tgz
+*.npy
+birds.npy
+labels.npy
+
+# TensorFlow.js files
+**/tfjs_bird_model/
+**/node_modules/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Logs
+logs/
+*.log
+
+# Images
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.tif
+*.tiff
+# Uncomment if you want to include sample images in the repo
+# !sample_images/*.jpg
+# !sample_images/*.png
+
+# TensorBoard
+tensorboard_logs/
