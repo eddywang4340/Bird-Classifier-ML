@@ -25,6 +25,7 @@ venv/
 .venv/
 ENV/
 env/
+.flask-venv
 
 # Model files and data
 *.h5
